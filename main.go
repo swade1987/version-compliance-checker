@@ -12,11 +12,6 @@ import (
 	"syscall"
 )
 
-const (
-	defaultPort              = "8080"
-	defaultRoutingServiceURL = "http://localhost:7878"
-)
-
 func main() {
 
 	var (
