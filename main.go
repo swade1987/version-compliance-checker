@@ -39,6 +39,20 @@ func main() {
 
 	// HTTP transport
 	go func() {
+
+		osxRequiredVersion, err := os.LookupEnv("OSX_REQUIRED_VERSION")
+		if err == false {
+			log.Fatal("Required environment variable OSX_REQUIRED_VERSION missing.")
+		}
+
+		androidRequiredVersion, err := os.LookupEnv("ANDROID_REQUIRED_VERSION")
+		if err == false {
+			log.Fatal("Required environment variable ANDROID_REQUIRED_VERSION missing.")
+		}
+
+		println(osxRequiredVersion)
+		println(androidRequiredVersion)
+
 		log.Println("version-compliance-checker is listening on port:", *httpAddr)
 		handler := compliant.NewHTTPServer(ctx, endpoints)
 		errChan <- http.ListenAndServe(*httpAddr, handler)
