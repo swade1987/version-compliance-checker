@@ -50,7 +50,7 @@ func MakeValidateEndpoint(srv Service, iosRequiredVersion string, androidRequire
 			validVersion, err = srv.Validate(ctx, req.CurrentVersion, androidRequiredVersion)
 		}
 
-		if req.DeviceType == iosRequiredVersion {
+		if req.DeviceType == Ios {
 			validVersion, err = srv.Validate(ctx, req.CurrentVersion, iosRequiredVersion)
 		}
 
