@@ -1,6 +1,6 @@
 package devicetype
 
-func Valid(device, android, ios string) (bool, error) {
+func IsValid(device, android, ios string) (bool, error) {
 
 	allowedDeviceTypes := []string{android, ios}
 	v := contains(allowedDeviceTypes, device)

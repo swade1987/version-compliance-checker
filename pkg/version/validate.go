@@ -5,7 +5,7 @@ import (
 	"github.com/Masterminds/semver"
 )
 
-func Valid(current, required string) (bool, error) {
+func IsValid(current, required string) (bool, error) {
 
 	c, err := semver.NewConstraint(fmt.Sprintf(">= %s", required))
 

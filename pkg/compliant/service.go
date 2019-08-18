@@ -27,7 +27,7 @@ func (compliantVersion) Status(ctx context.Context) (string, error) {
 // Validate will check if the date today's date
 func (compliantVersion) Validate(ctx context.Context, currentVersion string, requiredVersion string) (bool, error) {
 
-	c, err := version.Valid(currentVersion, requiredVersion)
+	c, err := version.IsValid(currentVersion, requiredVersion)
 	if err != nil {
 		return false, err
 	}

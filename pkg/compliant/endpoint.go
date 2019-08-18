@@ -40,7 +40,7 @@ func MakeValidateEndpoint(srv Service, iosRequiredVersion string, androidRequire
 		var err error
 
 		// Validate the device type provided.
-		_, err = devicetype.Valid(req.DeviceType, Android, Ios)
+		_, err = devicetype.IsValid(req.DeviceType, Android, Ios)
 		if err != nil {
 			return validateResponse{Compliant: false, RequiredVersion: "", Err: err.Error()}, nil
 		}
