@@ -4,6 +4,13 @@ import (
 	"context"
 	"errors"
 	"github.com/go-kit/kit/endpoint"
+
+	"github.com/swade1987/version-compliance-checker/pkg/devicetype"
+)
+
+const (
+	Android = "android"
+	Ios     = "ios"
 )
 
 // Endpoints are exposed
@@ -25,14 +32,34 @@ func MakeStatusEndpoint(srv Service) endpoint.Endpoint {
 }
 
 // MakeValidateEndpoint returns the response from our service "validate"
-func MakeValidateEndpoint(srv Service) endpoint.Endpoint {
+func MakeValidateEndpoint(srv Service, iosRequiredVersion string, androidRequiredVersion string) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(validateRequest)
-		b, err := srv.Validate(ctx, req.DeviceType, req.CurrentVersion)
+
+		var validVersion = false
+		var err error
+
+		// Validate the device type provided.
+		_, err = devicetype.Valid(req.DeviceType, Android, Ios)
 		if err != nil {
-			return validateResponse{b, "1.1.1", err.Error()}, nil
+			return validateResponse{Compliant: false, RequiredVersion: "", Err: err.Error()}, nil
 		}
-		return validateResponse{b, "0.0.0", ""}, nil
+
+		// Validate the current version provided.
+		if req.DeviceType == Android {
+			validVersion, err = srv.Validate(ctx, req.CurrentVersion, androidRequiredVersion)
+		}
+		validVersion, err = srv.Validate(ctx, req.CurrentVersion, iosRequiredVersion)
+
+		if err != nil {
+			return validateResponse{validVersion, "", err.Error()}, nil
+		}
+
+		if req.DeviceType == Android {
+			return validateResponse{validVersion, androidRequiredVersion, ""}, nil
+		}
+
+		return validateResponse{validVersion, iosRequiredVersion, ""}, nil
 	}
 }
 
@@ -58,5 +85,5 @@ func (e Endpoints) Validate(ctx context.Context, device string, version string) 
 	if validateResp.Err != "" {
 		return false, errors.New(validateResp.Err)
 	}
-	return validateResp.Valid, nil
+	return validateResp.Compliant, nil
 }

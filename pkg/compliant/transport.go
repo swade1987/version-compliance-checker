@@ -12,8 +12,8 @@ type validateRequest struct {
 }
 
 type validateResponse struct {
-	Valid           bool   `json:"valid"`
-	RequiredVersion string `json:"required_version"`
+	Compliant       bool   `json:"compliant"`
+	RequiredVersion string `json:"required_version,omitempty"`
 	Err             string `json:"err,omitempty"`
 }
 

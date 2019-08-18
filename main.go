@@ -30,28 +30,27 @@ func main() {
 		errChan <- fmt.Errorf("%s", <-c)
 	}()
 
+	iosRequiredVersion, err := os.LookupEnv("IOS_REQUIRED_VERSION")
+	if err == false {
+		log.Fatal("Required environment variable IOS_REQUIRED_VERSION missing.")
+	}
+
+	androidRequiredVersion, err := os.LookupEnv("ANDROID_REQUIRED_VERSION")
+	if err == false {
+		log.Fatal("Required environment variable ANDROID_REQUIRED_VERSION missing.")
+	}
+
+	log.Println("IOS_REQUIRED_VERSION: ", iosRequiredVersion)
+	log.Println("ANDROID_REQUIRED_VERSION: ", androidRequiredVersion)
+
 	// mapping endpoints
 	endpoints := compliant.Endpoints{
 		StatusEndpoint:   compliant.MakeStatusEndpoint(srv),
-		ValidateEndpoint: compliant.MakeValidateEndpoint(srv),
+		ValidateEndpoint: compliant.MakeValidateEndpoint(srv, iosRequiredVersion, androidRequiredVersion),
 	}
 
 	// HTTP transport
 	go func() {
-
-		osxRequiredVersion, err := os.LookupEnv("OSX_REQUIRED_VERSION")
-		if err == false {
-			log.Fatal("Required environment variable OSX_REQUIRED_VERSION missing.")
-		}
-
-		androidRequiredVersion, err := os.LookupEnv("ANDROID_REQUIRED_VERSION")
-		if err == false {
-			log.Fatal("Required environment variable ANDROID_REQUIRED_VERSION missing.")
-		}
-
-		println(osxRequiredVersion)
-		println(androidRequiredVersion)
-
 		log.Println("version-compliance-checker is listening on port:", *httpAddr)
 		handler := compliant.NewHTTPServer(ctx, endpoints)
 		errChan <- http.ListenAndServe(*httpAddr, handler)
