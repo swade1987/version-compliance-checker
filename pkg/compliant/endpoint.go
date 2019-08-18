@@ -8,21 +8,8 @@ import (
 
 // Endpoints are exposed
 type Endpoints struct {
-	GetEndpoint      endpoint.Endpoint
 	StatusEndpoint   endpoint.Endpoint
 	ValidateEndpoint endpoint.Endpoint
-}
-
-// MakeGetEndpoint returns the response from our service "get"
-func MakeGetEndpoint(srv Service) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		_ = request.(getRequest) // we really just need the request, we don't use any value from it
-		d, err := srv.Get(ctx)
-		if err != nil {
-			return getResponse{d, err.Error()}, nil
-		}
-		return getResponse{d, ""}, nil
-	}
 }
 
 // MakeStatusEndpoint returns the response from our service "status"
@@ -41,26 +28,12 @@ func MakeStatusEndpoint(srv Service) endpoint.Endpoint {
 func MakeValidateEndpoint(srv Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(validateRequest)
-		b, err := srv.Validate(ctx, req.Date)
+		b, err := srv.Validate(ctx, req.DeviceType, req.CurrentVersion)
 		if err != nil {
-			return validateResponse{b, err.Error()}, nil
+			return validateResponse{b, "1.1.1", err.Error()}, nil
 		}
-		return validateResponse{b, ""}, nil
+		return validateResponse{b, "0.0.0", ""}, nil
 	}
-}
-
-// Get endpoint mapping
-func (e Endpoints) Get(ctx context.Context) (string, error) {
-	req := getRequest{}
-	resp, err := e.GetEndpoint(ctx, req)
-	if err != nil {
-		return "", err
-	}
-	getResp := resp.(getResponse)
-	if getResp.Err != "" {
-		return "", errors.New(getResp.Err)
-	}
-	return getResp.Date, nil
 }
 
 // Status endpoint mapping
@@ -75,8 +48,8 @@ func (e Endpoints) Status(ctx context.Context) (string, error) {
 }
 
 // Validate endpoint mapping
-func (e Endpoints) Validate(ctx context.Context, date string) (bool, error) {
-	req := validateRequest{Date: date}
+func (e Endpoints) Validate(ctx context.Context, device string, version string) (bool, error) {
+	req := validateRequest{DeviceType: device, CurrentVersion: version}
 	resp, err := e.ValidateEndpoint(ctx, req)
 	if err != nil {
 		return false, err

@@ -19,12 +19,6 @@ func NewHTTPServer(ctx context.Context, endpoints Endpoints) http.Handler {
 		encodeResponse,
 	))
 
-	r.Methods("GET").Path("/get").Handler(httptransport.NewServer(
-		endpoints.GetEndpoint,
-		decodeGetRequest,
-		encodeResponse,
-	))
-
 	r.Methods("POST").Path("/validate").Handler(httptransport.NewServer(
 		endpoints.ValidateEndpoint,
 		decodeValidateRequest,

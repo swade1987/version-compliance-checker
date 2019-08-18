@@ -32,7 +32,6 @@ func main() {
 
 	// mapping endpoints
 	endpoints := compliant.Endpoints{
-		GetEndpoint:      compliant.MakeGetEndpoint(srv),
 		StatusEndpoint:   compliant.MakeStatusEndpoint(srv),
 		ValidateEndpoint: compliant.MakeValidateEndpoint(srv),
 	}
