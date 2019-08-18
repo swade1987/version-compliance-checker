@@ -18,6 +18,6 @@ func Valid(current, required string) (bool, error) {
 		return false, &CurrentVersionNotParseableError{Version: current}
 	}
 
-	// Check if the version meets the constraints. The a variable will be true.
+	// Check if the version meets the constraints.
 	return c.Check(v), nil
 }
