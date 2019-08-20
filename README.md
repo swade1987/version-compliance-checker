@@ -14,13 +14,13 @@ $ ANDROID_REQUIRED_VERSION
 
 ## Endpoints
 
-### /status
+### /metrics
 
-The `/status` endpoint is there to be used a validate whether or not the version is up.
+This endpoint provides prometheus metrics about the running service.
 
-### /validate
+### /devicevalidation/v1/validate
 
-The `/validate` endpoint is a `POST` method with the following **mandatory** body fields.
+This endpoint is a `POST` method with the following **mandatory** body fields.
 
 ```
 device_type             # Possible options are ios or android
