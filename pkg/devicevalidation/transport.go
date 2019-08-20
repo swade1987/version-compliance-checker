@@ -3,6 +3,7 @@ package devicevalidation
 import (
 	"context"
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -35,13 +36,20 @@ func MakeHandler(dvs Service, logger kitlog.Logger) http.Handler {
 }
 
 func decodeValidateRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	deviceType := r.PostFormValue("device_type")
-	currentVersion := r.PostFormValue("current_version")
+	// Read body
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		return nil, err
+	}
 
-	return validateRequest{
-		DeviceType:     deviceType,
-		CurrentVersion: currentVersion,
-	}, nil
+	// Unmarshal
+	vr := validateRequest{}
+	err = json.Unmarshal(b, &vr)
+	if err != nil {
+		return nil, err
+	}
+	return vr, nil
 }
 
 func encodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {

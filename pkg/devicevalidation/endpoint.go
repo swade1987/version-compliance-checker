@@ -7,8 +7,8 @@ import (
 )
 
 type validateRequest struct {
-	DeviceType     string
-	CurrentVersion string
+	DeviceType     string `json:"device_type"`
+	CurrentVersion string `json:"current_version"`
 }
 
 type validateResponse struct {
