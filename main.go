@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/go-kit/kit/examples/shipping/booking"
 	"net/http"
 	"os"
 	"os/signal"
