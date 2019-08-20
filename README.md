@@ -18,7 +18,7 @@ $ ANDROID_REQUIRED_VERSION
 
 This endpoint provides prometheus metrics about the running service.
 
-### /devicevalidation/v1/validate
+### /validate
 
 This endpoint is a `POST` method with the following **mandatory** body fields.
 
@@ -30,5 +30,5 @@ current_version         # Must be a semantic version
 The request must be sent using the structure below
 
 ```
-$ curl -XPOST -d '{"device_type":"android", "current_version": "1.1.0"}' http://localhost:8080/devicevalidation/v1/validate
+$ curl -XPOST -d '{"device_type":"android", "current_version": "1.1.0"}' http://localhost:8080/validate
 ```
