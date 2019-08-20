@@ -21,9 +21,22 @@ BIN            := bin
 VERSION_PKG    := $(GIT_REPO)/pkg/runtime/version
 LD_FLAGS       := -ldflags '-X "$(VERSION_PKG).GitSHA=${GIT_SHA}" -X "$(VERSION_PKG).Version=${VERSION}" -X "$(VERSION_PKG).BuildDate=${BUILD_DATE}" -X "$(VERSION_PKG).Maintainer=${MAINTAINER}"'
 
+# If no target is defined, assume the host is the target.
+ifeq ($(origin GOOS), undefined)
+	GOOS := $(shell go env GOOS)
+endif
+# Lots of these target goarches probably won't work,
+# since we depend on vendored packages also being built for the correct arch
+ifeq ($(origin GOARCH), undefined)
+	GOARCH := $(shell go env GOARCH)
+endif
+
+TARGETS := darwin linux
+
 #------------------------------------------------------------------
 # Build targets
 #------------------------------------------------------------------
+
 
 .PHONY: all
 all: test version-compliance-checker  ## Run test and version-compliance-checker  (default)
@@ -34,8 +47,7 @@ test: fmt vet ## Run tests
 
 .PHONY: version-compliance-checker
 version-compliance-checker: fmt vet ## Build londonbikes binary
-	env GOOS=linux GOARCH=amd64 $(GOCMD) build $(LD_FLAGS) -o $(BIN)/$(PROJNAME)-linux $(GIT_REPO)
-	env GOOS=darwin GOARCH=amd64 $(GOCMD) build $(LD_FLAGS) -o $(BIN)/$(PROJNAME)-darwin $(GIT_REPO)
+	GOOS=$(GOOS) GOARCH=$(GOARCH) $(GOCMD) build $(LD_FLAGS) -o $(BIN)/$(PROJNAME)-$(GOOS) $(GIT_REPO)
 
 .PHONY: fmt
 fmt: ## Run go fmt against code
@@ -44,6 +56,10 @@ fmt: ## Run go fmt against code
 .PHONY: vet
 vet: ## Run go vet against code
 	$(GOCMD) vet ./pkg/... ./cmd/...
+
+.PHONY: run
+run: ## Run the app
+	IOS_REQUIRED_VERSION=1.1.1 ANDROID_REQUIRED_VERSION=2.2.2 $(BIN)/$(PROJNAME)-$(GOOS)
 
 .PHONY: help
 help:  ## Show help messages for make targets
