@@ -29,7 +29,7 @@ func MakeHandler(dvs Service, logger kitlog.Logger) http.Handler {
 		opts...,
 	)
 
-	r.Handle("validate", validateHandler).Methods("POST")
+	r.Handle("/devicevalidation/v1/validate", validateHandler).Methods("POST")
 
 	return r
 }

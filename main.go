@@ -79,7 +79,7 @@ func main() {
 
 	mux := http.NewServeMux()
 
-	mux.Handle("/devicevalidation/v1", devicevalidation.MakeHandler(dvs, httpLogger))
+	mux.Handle("/devicevalidation/v1/", devicevalidation.MakeHandler(dvs, httpLogger))
 
 	http.Handle("/", accessControl(mux))
 	http.Handle("/metrics", promhttp.Handler())
