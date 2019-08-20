@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/go-kit/kit/examples/shipping/booking"
 	"net/http"
 	"os"
 	"os/signal"
@@ -60,8 +61,8 @@ func main() {
 	var dvs devicevalidation.Service
 	dvs = devicevalidation.NewService(dmRepo)
 	dvs = devicevalidation.NewLoggingService(logger, dvs)
-	dvs = devicevalidation.NewInstrumentingService(kitprometheus.NewCounterFrom(
-		stdprometheus.CounterOpts{
+	dvs = devicevalidation.NewInstrumentingService(
+		kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
 			Namespace: "api",
 			Subsystem: "device_validation",
 			Name:      "request_count",
@@ -73,7 +74,8 @@ func main() {
 			Name:      "request_latency_microseconds",
 			Help:      "Total duration of requests in microseconds.",
 		}, fieldKeys),
-		dvs)
+		dvs,
+	)
 
 	httpLogger := log.With(logger, "component", "http")
 
