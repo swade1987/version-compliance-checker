@@ -31,35 +31,34 @@ ifeq ($(origin GOARCH), undefined)
 	GOARCH := $(shell go env GOARCH)
 endif
 
-TARGETS := darwin linux
-
 #------------------------------------------------------------------
 # Build targets
 #------------------------------------------------------------------
 
+TARGETS := darwin linux
 
 .PHONY: all
 all: test version-compliance-checker  ## Run test and version-compliance-checker  (default)
 
 .PHONY: test
 test: fmt vet ## Run tests
-	$(GOCMD) test ./pkg/... ./cmd/... -coverprofile cover.out
+	$(GOCMD) test ./pkg/... -coverprofile cover.out
 
 .PHONY: version-compliance-checker
-version-compliance-checker: fmt vet ## Build londonbikes binary
-	GOOS=$(GOOS) GOARCH=$(GOARCH) $(GOCMD) build $(LD_FLAGS) -o $(BIN)/$(PROJNAME)-$(GOOS) $(GIT_REPO)
+version-compliance-checker: fmt vet ## Build binaries
+	GOOS=$(GOOS) GOARCH=$(GOARCH) $(GOCMD) build $(LD_FLAGS) -o $(BIN)/$(PROJNAME) $(GIT_REPO)
 
 .PHONY: fmt
 fmt: ## Run go fmt against code
-	$(GOCMD) fmt ./pkg/... ./cmd/...
+	$(GOCMD) fmt ./pkg/...
 
 .PHONY: vet
 vet: ## Run go vet against code
-	$(GOCMD) vet ./pkg/... ./cmd/...
+	$(GOCMD) vet ./pkg/...
 
 .PHONY: run
 run: ## Run the app
-	IOS_REQUIRED_VERSION=1.1.1 ANDROID_REQUIRED_VERSION=2.2.2 $(BIN)/$(PROJNAME)-$(GOOS)
+	IOS_REQUIRED_VERSION=1.1.1 ANDROID_REQUIRED_VERSION=2.2.2 $(BIN)/$(PROJNAME)
 
 .PHONY: help
 help:  ## Show help messages for make targets
