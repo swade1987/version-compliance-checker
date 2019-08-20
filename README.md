@@ -30,5 +30,5 @@ current_version         # Must be a semantic version
 The request must be sent using the structure below
 
 ```
-$ curl -XPOST -d '{"device_type":"android", "current_version": "1.1.0"}' http://localhost:8080/validate
+$ curl -XPOST -d '{"device_type":"android", "current_version": "1.1.0"}' http://localhost:8080/devicevalidation/v1/validate
 ```
