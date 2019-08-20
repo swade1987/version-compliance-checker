@@ -21,6 +21,6 @@ LABEL git.commit=$git_commit
 LABEL git.branch=$git_branch
 LABEL build.on=$built_on
 
-COPY --from=builder /go/src/github.com/swade1987/version-compliance-checker/bin/version-compliance-checker /version-compliance-checker
+COPY --from=builder /go/src/github.com/swade1987/version-compliance-checker/bin/version-compliance-checker .
 
 CMD [ "/version-compliance-checker" ]

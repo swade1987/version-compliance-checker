@@ -46,7 +46,7 @@ test: fmt vet ## Run tests
 
 .PHONY: version-compliance-checker
 version-compliance-checker: fmt vet ## Build binaries
-	GOOS=$(GOOS) GOARCH=$(GOARCH) $(GOCMD) build $(LD_FLAGS) -o $(BIN)/$(PROJNAME) $(GIT_REPO)
+	GOOS=$(GOOS) GOARCH=$(GOARCH) CGO_ENABLED=0 $(GOCMD) build $(LD_FLAGS) -o $(BIN)/$(PROJNAME) $(GIT_REPO)
 
 .PHONY: fmt
 fmt: ## Run go fmt against code
