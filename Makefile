@@ -66,5 +66,5 @@ help:  ## Show help messages for make targets
 
 performance: ## Run performance tests
 	cd vegeta && \
-	vegeta attack -targets=request -rate=100 -duration=10s | tee results.bin | vegeta report && \
+	vegeta attack -targets=request -rate=500 -duration=10s | tee results.bin | vegeta report && \
 	vegeta plot results.bin > results.html
