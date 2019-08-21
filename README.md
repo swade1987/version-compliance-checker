@@ -35,8 +35,6 @@ $ curl -XPOST -d '{"device_type":"android", "current_version": "1.1.0"}' http://
 
 ## Performance
 
-The application has been load tested with 700 current users accessing it using [Vegeta](https://github.com/tsenart/vegeta)
-
-The results of this test can be seen below.
+The application has been load tested with 700 current users accessing it using [Vegeta](https://github.com/tsenart/vegeta).The results of this test can be seen below.
 
 ![Alt text](img/vegeta-plot.png?raw=true "Load Test")
