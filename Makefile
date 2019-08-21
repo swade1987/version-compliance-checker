@@ -21,6 +21,16 @@ BIN            := bin
 VERSION_PKG    := $(GIT_REPO)/pkg/runtime/version
 LD_FLAGS       := -ldflags '-X "$(VERSION_PKG).GitSHA=${GIT_SHA}" -X "$(VERSION_PKG).Version=${VERSION}" -X "$(VERSION_PKG).BuildDate=${BUILD_DATE}" -X "$(VERSION_PKG).Maintainer=${MAINTAINER}"'
 
+#------------------------------------------------------------------
+# Docker image build information
+#------------------------------------------------------------------
+QUAY_REPO	   		:= swade1987
+QUAY_USERNAME  		:= swade1987+version_compliance_checker
+QUAY_PASSWORD  		?= "unknown"
+CIRCLE_BUILD_NUM	?= "unknown"
+IMG_VERSION			:= 1.1.$(CIRCLE_BUILD_NUM)
+IMAGE 				:= quay.io/$(QUAY_REPO)/$(PROJNAME):$(IMG_VERSION)
+
 # If no target is defined, assume the host is the target.
 ifeq ($(origin GOOS), undefined)
 	GOOS := $(shell go env GOOS)
@@ -60,11 +70,31 @@ vet: ## Run go vet against code
 run: ## Run the app
 	IOS_REQUIRED_VERSION=1.1.1 ANDROID_REQUIRED_VERSION=2.2.2 $(BIN)/$(PROJNAME)
 
-.PHONY: help
-help:  ## Show help messages for make targets
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[32m%-30s\033[0m %s\n", $$1, $$2}'
-
 performance: ## Run performance tests
 	cd vegeta && \
 	vegeta attack -targets=request -rate=500 -duration=10s | tee results.bin | vegeta report && \
 	vegeta plot results.bin > results.html
+
+docker-build: ## Builds a docker container
+	docker build \
+	--build-arg git_repository=`git config --get remote.origin.url` \
+	--build-arg git_branch=`git rev-parse --abbrev-ref HEAD` \
+	--build-arg git_commit=`git rev-parse HEAD` \
+	--build-arg built_on=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
+	-t $(IMAGE) .
+
+docker-login: ## Logs into the docker daemon
+	docker login -u $(QUAY_USERNAME) -p $(QUAY_PASSWORD) quay.io
+
+docker-push: ## Pushes to docker images to quay.io
+	docker push $(IMAGE)
+	docker rmi $(IMAGE)
+
+docker-logout: ## Logs out of the docker daemon
+	docker logout
+
+.PHONY: help
+help:  ## Show help messages for make targets
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[32m%-30s\033[0m %s\n", $$1, $$2}'
+
+
