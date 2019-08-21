@@ -47,6 +47,18 @@ Possible responses are:
 {"error":"device mapping not found"}
 ```
 
+## Running locally
+
+The application runs locally by leveraging docker-compose. 
+
+Simply run the following command:
+
+```
+$ make run 
+```
+
+Note: The environment variables can be changed by updating the `.env` file in the root of this project.
+
 ## Performance
 
 The application has been load tested with 700 current users accessing it using [Vegeta](https://github.com/tsenart/vegeta) (see below).
