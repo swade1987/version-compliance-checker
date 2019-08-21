@@ -68,7 +68,7 @@ vet: ## Run go vet against code
 
 .PHONY: run
 run: ## Run the app
-	IOS_REQUIRED_VERSION=1.1.1 ANDROID_REQUIRED_VERSION=2.2.2 $(BIN)/$(PROJNAME)
+	docker compose up -d
 
 performance: ## Run performance tests
 	cd vegeta && \
