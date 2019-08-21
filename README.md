@@ -33,6 +33,18 @@ The request must be sent using the structure below
 $ curl -XPOST -d '{"device_type":"android", "current_version": "1.1.0"}' http://localhost:8080/validate
 ```
 
+Possible responses are:
+
+```
+{"compliant":true}
+
+{"compliant":false,"required_version":"2.2.2"}
+
+{"error":"The current version provided (xyz) is not a valid semantic version."}
+
+{"error":"device mapping not found"}
+```
+
 ## Performance
 
 The application has been load tested with 700 current users accessing it using [Vegeta](https://github.com/tsenart/vegeta) (see below).
