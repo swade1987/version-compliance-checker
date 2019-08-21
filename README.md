@@ -2,6 +2,8 @@
 
 A Golang web-service to validate mobile app version compliance
 
+[![Docker Repository on Quay](https://quay.io/repository/swade1987/version-compliance-checker/status "Docker Repository on Quay")](https://quay.io/repository/swade1987/version-compliance-checker)
+
 ## Requirements
 
 Two environments variables are required for this application to work.
