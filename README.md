@@ -57,6 +57,8 @@ Simply run the following command:
 $ make run 
 ```
 
+You can now use the service via `http://localhost:8080`.
+
 Note: The environment variables can be changed by updating the `.env` file in the root of this project.
 
 ## Performance
