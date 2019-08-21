@@ -63,3 +63,8 @@ run: ## Run the app
 .PHONY: help
 help:  ## Show help messages for make targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[32m%-30s\033[0m %s\n", $$1, $$2}'
+
+performance: ## Run performance tests
+	cd vegeta && \
+	vegeta attack -targets=request -rate=500 -duration=10s | tee results.bin | vegeta report && \
+	vegeta plot results.bin > results.html

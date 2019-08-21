@@ -32,3 +32,9 @@ The request must be sent using the structure below
 ```
 $ curl -XPOST -d '{"device_type":"android", "current_version": "1.1.0"}' http://localhost:8080/validate
 ```
+
+## Performance
+
+The application has been load tested with 700 current users accessing it using [Vegeta](https://github.com/tsenart/vegeta) (see below).
+
+![Alt text](img/vegeta-plot.png?raw=true "Load Test")
