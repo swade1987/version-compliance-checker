@@ -9,7 +9,7 @@ COPY . .
 RUN make
 
 FROM scratch
-MAINTAINER Platform Engineering <platform@mettle.co.uk>
+MAINTAINER Steven Wade <steven@stevenwade.co.uk>
 
 ARG git_repository="Unknown"
 ARG git_commit="Unknown"
